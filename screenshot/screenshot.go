@@ -4,9 +4,8 @@ import (
 	"github.com/go-rod/rod"
 )
 
-func MakeScreenshot(url string) {
+func MakeScreenshot(url string, path string) {
 	page := rod.New().MustConnect().MustPage(url)
 	page.MustWaitStable()
-
-	page.MustScreenshotFullPage("tmp/a.png")
+	page.MustScreenshotFullPage(path)
 }

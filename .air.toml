@@ -1,0 +1,11 @@
+[build]
+    cmd = "go run main/main.go"
+    bin = "tmp/main"
+    full_bin = "go build -o ./tmp/main main/main.go"
+
+[watch]
+    includes = ["."]
+    excludes = ["tmp"]
+
+[screen]
+  clear_on_rebuild = false

@@ -1,7 +1,8 @@
-package mainn
+package main
 
 import (
 	"log"
+	"os"
 	"screenshotapi/screenshot"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,15 +23,24 @@ func main() {
 		c.Accepts("application/json")
 
 		body := new(Url)
-
 		if err := c.BodyParser(body); err != nil {
 			return err
 		}
 
 		url := body.Url
-		screenshot.MakeScreenshot(url)
+		hash := screenshot.GenerateHash(url)
+		path := "tmp/" + hash + ".png"
+		screenshot.MakeScreenshot(url, path)
 
-		return c.SendString("Hello, World!")
+		img, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		go screenshot.CleanupFromPath(path)
+
+		c.Set("Content-Type", "image/png")
+		return c.Send(img)
 	})
 
 	log.Fatal(app.Listen(":8080"))
